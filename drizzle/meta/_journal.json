@@ -8,6 +8,20 @@
       "when": 1792261645107,
       "tag": "0000_kezdo_sema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792337214960,
+      "tag": "0001_tanar",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792400000000,
+      "tag": "0002_tanar_email",
+      "breakpoints": true
     }
   ]
 }

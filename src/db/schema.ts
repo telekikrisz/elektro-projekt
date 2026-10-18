@@ -1,9 +1,11 @@
 import { sql } from "drizzle-orm";
 import {
+  boolean,
   integer,
   pgTable,
   primaryKey,
   text,
+  timestamp,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
@@ -86,6 +88,27 @@ export const alkatreszTulajdonsag = pgTable(
     primaryKey({ columns: [table.alkatreszId, table.tulajdonsagId] }),
   ],
 );
+
+export const tanar = pgTable(
+  "tanar",
+  {
+    id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+    email: text("email").notNull(),
+    nev: text("nev").notNull(),
+    jelszoHash: text("jelszo_hash").notNull(),
+    szuperadmin: boolean("szuperadmin").notNull().default(false),
+    jelszoCsere: boolean("jelszo_csere").notNull().default(true),
+  },
+  (table) => [uniqueIndex("tanar_email_lower").on(sql`lower(${table.email})`)],
+);
+
+export const munkamenet = pgTable("munkamenet", {
+  token: text("token").primaryKey(),
+  tanarId: integer("tanar_id")
+    .notNull()
+    .references(() => tanar.id, { onDelete: "cascade" }),
+  lejar: timestamp("lejar", { withTimezone: true }).notNull(),
+});
 
 export const tarolo = pgTable(
   "tarolo",

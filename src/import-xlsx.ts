@@ -1,6 +1,7 @@
 import { eq, sql } from "drizzle-orm";
 import ExcelJS from "exceljs";
 import type { Cell, CellValue } from "exceljs";
+import { pathToFileURL } from "node:url";
 import {
   alkatresz,
   alkatreszTulajdonsag,
@@ -87,9 +88,10 @@ async function tulajdonsagId(tx: Pick<typeof db, "select" | "insert">, megneveze
   return uj.id;
 }
 
-async function betolt(fajl: string) {
+export async function excelBetolt(forras: string | Buffer) {
   const munkafuzet = new ExcelJS.Workbook();
-  await munkafuzet.xlsx.readFile(fajl);
+  if (typeof forras === "string") await munkafuzet.xlsx.readFile(forras);
+  else await munkafuzet.xlsx.load(forras as unknown as Parameters<typeof munkafuzet.xlsx.load>[0]);
   const lap = munkafuzet.worksheets[0];
   if (!lap) throw new Error("Az Excelnek nincs munkalapja.");
 
@@ -193,13 +195,16 @@ async function betolt(fajl: string) {
     return db;
   });
 
-  console.log(`${eredmeny} alkatrész betöltve: ${fajl}`);
+  return eredmeny;
 }
 
-const fajl = process.argv[2] ?? "minta (1).xlsx";
-
-try {
-  await betolt(fajl);
-} finally {
-  await closeDb();
+const sajat = process.argv[1] ? pathToFileURL(process.argv[1]).href : "";
+if (import.meta.url === sajat) {
+  const fajl = process.argv[2] ?? "minta (1).xlsx";
+  try {
+    const eredmeny = await excelBetolt(fajl);
+    console.log(`${eredmeny} alkatrész betöltve: ${fajl}`);
+  } finally {
+    await closeDb();
+  }
 }

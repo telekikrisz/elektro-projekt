@@ -209,6 +209,133 @@ body { margin: 0; }
   border-top: 1px solid #eadfce;
 }
 
+.tanar-lap {
+  display: grid;
+  grid-template-columns: 16rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.tanar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.6rem;
+  background: rgba(255, 252, 247, 0.96);
+  border-radius: 16px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+.tanar-menu button {
+  width: 100%;
+  justify-content: flex-start;
+  background: transparent;
+  color: #1a3a2a;
+}
+
+.tanar-menu button:hover { background: #e7f0ea; }
+
+.tanar-menu button[aria-current="page"],
+.tanar-menu button[aria-current="page"]:hover {
+  background: #1a4d32;
+  color: #fff;
+}
+
+.tanar-tartalom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.felso-menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  margin-bottom: 1.1rem;
+}
+
+.felso-menu button {
+  width: auto;
+  background: transparent;
+  color: #1a3a2a;
+  border: 1px solid #1a4d32;
+}
+
+.felso-menu button:hover { background: #e7f0ea; }
+
+.felso-menu button[aria-current="page"],
+.felso-menu button[aria-current="page"]:hover {
+  background: #1a4d32;
+  color: #fff;
+}
+
+.tanar-tartalom h2 { text-align: center; }
+
+.tanar-tartalom .urlap {
+  align-items: center;
+  width: min(22rem, 100%);
+}
+
+.tanar-tartalom .urlap label { width: 100%; text-align: left; }
+
+.tanar-tartalom .urlap button,
+.tanar-tartalom .gomb-sor button,
+.tanar-tartalom .sor-gombok button {
+  width: auto;
+  min-width: 0;
+  align-self: center;
+}
+
+.gomb-sor {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.tanar-tartalom .felhasznalok {
+  width: auto;
+  margin-inline: auto;
+}
+
+.veszely,
+.veszely:hover {
+  background: #8e1c2c;
+  color: #fff;
+}
+
+.sor-gombok {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.felhasznalok { margin-top: 0.4rem; }
+
+.belepes-oldal {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.belepes-oldal .belepes-lap {
+  width: 18.5rem;
+  max-width: 100%;
+}
+
+.belepes-oldal h2 { text-align: center; }
+
+.belepes-oldal .urlap,
+.belepes-oldal .urlap label,
+.belepes-oldal .urlap button {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
 .belepes-lap { padding: 1.25rem; }
 .belepes-lap h2 {
   margin: 0 0 0.4rem;
@@ -216,6 +343,18 @@ body { margin: 0; }
   color: #1a3a2a;
 }
 .belepes-lap p { margin: 0 0 1rem; color: #5c4a3a; }
+
+.urlap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.8rem;
+  max-width: 28rem;
+}
+
+.urlap button { min-width: 9rem; }
+
+.hiba { color: #8e1c2c; }
 
 .panel-allapot {
   color: #5c4a3a;
@@ -407,6 +546,7 @@ thead th {
 }
 
 @media (max-width: 800px) {
+  .tanar-lap { grid-template-columns: 1fr; }
   .asztal { display: none; }
   .kartyak { display: block; }
   .adatlap { grid-template-columns: 1fr; }

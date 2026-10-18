@@ -1,0 +1,624 @@
+{
+  "id": "cefcf385-693f-4c4a-913c-a628be0829b1",
+  "prevId": "88d3b069-d32a-4f91-a7fa-51dc5f55efb4",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.alkatresz": {
+      "name": "alkatresz",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "alkatresz_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "megnevezes": {
+          "name": "megnevezes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cikkszam": {
+          "name": "cikkszam",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipus_id": {
+          "name": "tipus_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "technologia_id": {
+          "name": "technologia_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tokozas_id": {
+          "name": "tokozas_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kep_url": {
+          "name": "kep_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "adatlap_url": {
+          "name": "adatlap_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "megjegyzes": {
+          "name": "megjegyzes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "alkatresz_tipus_id_tipus_id_fk": {
+          "name": "alkatresz_tipus_id_tipus_id_fk",
+          "tableFrom": "alkatresz",
+          "tableTo": "tipus",
+          "columnsFrom": [
+            "tipus_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "alkatresz_technologia_id_technologia_id_fk": {
+          "name": "alkatresz_technologia_id_technologia_id_fk",
+          "tableFrom": "alkatresz",
+          "tableTo": "technologia",
+          "columnsFrom": [
+            "technologia_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "alkatresz_tokozas_id_tokozas_id_fk": {
+          "name": "alkatresz_tokozas_id_tokozas_id_fk",
+          "tableFrom": "alkatresz",
+          "tableTo": "tokozas",
+          "columnsFrom": [
+            "tokozas_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "alkatresz_cikkszam_unique": {
+          "name": "alkatresz_cikkszam_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "cikkszam"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.alkatresz_tulajdonsag": {
+      "name": "alkatresz_tulajdonsag",
+      "schema": "",
+      "columns": {
+        "alkatresz_id": {
+          "name": "alkatresz_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tulajdonsag_id": {
+          "name": "tulajdonsag_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ertek": {
+          "name": "ertek",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "alkatresz_tulajdonsag_alkatresz_id_alkatresz_id_fk": {
+          "name": "alkatresz_tulajdonsag_alkatresz_id_alkatresz_id_fk",
+          "tableFrom": "alkatresz_tulajdonsag",
+          "tableTo": "alkatresz",
+          "columnsFrom": [
+            "alkatresz_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "alkatresz_tulajdonsag_tulajdonsag_id_tulajdonsag_id_fk": {
+          "name": "alkatresz_tulajdonsag_tulajdonsag_id_tulajdonsag_id_fk",
+          "tableFrom": "alkatresz_tulajdonsag",
+          "tableTo": "tulajdonsag",
+          "columnsFrom": [
+            "tulajdonsag_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "alkatresz_tulajdonsag_alkatresz_id_tulajdonsag_id_pk": {
+          "name": "alkatresz_tulajdonsag_alkatresz_id_tulajdonsag_id_pk",
+          "columns": [
+            "alkatresz_id",
+            "tulajdonsag_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.munkamenet": {
+      "name": "munkamenet",
+      "schema": "",
+      "columns": {
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "tanar_id": {
+          "name": "tanar_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lejar": {
+          "name": "lejar",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "munkamenet_tanar_id_tanar_id_fk": {
+          "name": "munkamenet_tanar_id_tanar_id_fk",
+          "tableFrom": "munkamenet",
+          "tableTo": "tanar",
+          "columnsFrom": [
+            "tanar_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tanar": {
+      "name": "tanar",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "tanar_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "felhasznalonev": {
+          "name": "felhasznalonev",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nev": {
+          "name": "nev",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "jelszo_hash": {
+          "name": "jelszo_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "tanar_felhasznalonev_lower": {
+          "name": "tanar_felhasznalonev_lower",
+          "columns": [
+            {
+              "expression": "lower(\"felhasznalonev\")",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tarolo": {
+      "name": "tarolo",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "tarolo_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "oldal": {
+          "name": "oldal",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sor": {
+          "name": "sor",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "oszlop": {
+          "name": "oszlop",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "alkatresz_id": {
+          "name": "alkatresz_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "tarolo_cim": {
+          "name": "tarolo_cim",
+          "columns": [
+            {
+              "expression": "oldal",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "sor",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "oszlop",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "tarolo_alkatresz_id_alkatresz_id_fk": {
+          "name": "tarolo_alkatresz_id_alkatresz_id_fk",
+          "tableFrom": "tarolo",
+          "tableTo": "alkatresz",
+          "columnsFrom": [
+            "alkatresz_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.technologia": {
+      "name": "technologia",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "technologia_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "nev": {
+          "name": "nev",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "technologia_nev_lower": {
+          "name": "technologia_nev_lower",
+          "columns": [
+            {
+              "expression": "lower(\"nev\")",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tipus": {
+      "name": "tipus",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "tipus_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "nev": {
+          "name": "nev",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "tipus_nev_lower": {
+          "name": "tipus_nev_lower",
+          "columns": [
+            {
+              "expression": "lower(\"nev\")",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tokozas": {
+      "name": "tokozas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "tokozas_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "nev": {
+          "name": "nev",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "tokozas_nev_lower": {
+          "name": "tokozas_nev_lower",
+          "columns": [
+            {
+              "expression": "lower(\"nev\")",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tulajdonsag": {
+      "name": "tulajdonsag",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "tulajdonsag_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "megnevezes": {
+          "name": "megnevezes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "tulajdonsag_megnevezes_lower": {
+          "name": "tulajdonsag_megnevezes_lower",
+          "columns": [
+            {
+              "expression": "lower(\"megnevezes\")",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
