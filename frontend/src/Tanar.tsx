@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { Alkatreszek, type AlkatreszResz } from "./Alkatreszek";
 import { Felhasznalok, type FelhasznaloResz } from "./Felhasznalok";
 import { Keret } from "./Keret";
 
@@ -14,11 +15,18 @@ export function Tanar() {
   const [tolt, setTolt] = useState(false);
   const [menu, setMenu] = useState<"felhasznalok" | "alkatreszek" | "import">("alkatreszek");
   const [resz, setResz] = useState<FelhasznaloResz>("uj");
+  const [alkatreszResz, setAlkatreszResz] = useState<AlkatreszResz>("uj");
 
   const menuk = [
     { id: "alkatreszek" as const, cim: "Alkatrészek kezelése" },
     { id: "import" as const, cim: "Export/import" },
     { id: "felhasznalok" as const, cim: "Felhasználók kezelése" },
+  ];
+  const alkatreszReszek: { id: AlkatreszResz; cim: string }[] = [
+    { id: "uj", cim: "Új alkatrész felvitele" },
+    { id: "lista", cim: "Meglévők módosítása és törlése" },
+    { id: "hely", cim: "Alkatrészek elhelyezése" },
+    ...(en?.szuperadmin ? [{ id: "alap" as const, cim: "Alapadatok módosítása" }] : []),
   ];
   const reszek: { id: FelhasznaloResz; cim: string }[] = [
     { id: "uj", cim: "Új felhasználó létrehozása" },
@@ -121,7 +129,23 @@ export function Tanar() {
             }}
           />
         ) : null}
-        {menu === "alkatreszek" ? <h2>Alkatrészek kezelése</h2> : null}
+        {menu === "alkatreszek" ? (
+          <>
+            <nav className="felso-menu" aria-label="Alkatrészek">
+              {alkatreszReszek.map((alpont) => (
+                <button
+                  key={alpont.id}
+                  type="button"
+                  aria-current={alkatreszResz === alpont.id ? "page" : undefined}
+                  onClick={() => setAlkatreszResz(alpont.id)}
+                >
+                  {alpont.cim}
+                </button>
+              ))}
+            </nav>
+            <Alkatreszek resz={alkatreszResz} />
+          </>
+        ) : null}
         {menu === "import" ? (
           <>
         <h2>Export/import</h2>

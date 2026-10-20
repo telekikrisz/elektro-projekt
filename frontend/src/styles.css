@@ -300,6 +300,118 @@ body { margin: 0; }
   margin-inline: auto;
 }
 
+.alkatresz-resz,
+.tanar-kereso {
+  width: 100%;
+  align-self: stretch;
+}
+
+.tanar-kereso form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.65rem 0.75rem;
+  align-items: end;
+  margin-bottom: 1rem;
+}
+
+.tanar-kereso label { text-align: left; }
+
+.kereso-gombok {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.45rem;
+}
+
+.kereso-gombok button {
+  width: auto;
+  min-width: 0;
+  align-self: end;
+}
+
+.alkatresz-lista { width: 100%; }
+
+.tanar-tartalom .urlap.alkatresz-urlap,
+.tanar-tartalom .urlap.rekesz-urlap {
+  width: 100%;
+  max-width: none;
+  align-items: stretch;
+}
+
+.alkatresz-urlap h2,
+.rekesz-urlap h2,
+.alapadatok h2,
+.tanar-kereso > h2 {
+  width: 100%;
+  text-align: center;
+}
+
+.alkatresz-mezok {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem 1rem;
+  width: 100%;
+}
+
+.alkatresz-urlap .gomb-sor,
+.rekesz-urlap .gomb-sor {
+  width: 100%;
+}
+
+.tulajdonsagok {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  color: #1a3a2a;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.tulajdonsag-sor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.tanar-tartalom .tulajdonsag-sor button,
+.alap-sor button,
+.rekesz-lista button {
+  width: auto;
+  min-width: max-content;
+  white-space: nowrap;
+}
+
+.alapadatok { width: 100%; }
+
+.alapadatok h3 {
+  margin: 1rem 0 0.45rem;
+  text-align: center;
+  color: #1a3a2a;
+}
+
+.alap-sor,
+.rekesz-lista div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.45rem;
+}
+
+.alap-sor input { flex: 1 1 14rem; min-width: 10rem; }
+
+.rekesz-lista {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .veszely,
 .veszely:hover {
   background: #8e1c2c;
@@ -543,6 +655,10 @@ thead th {
 .lapozo button:disabled {
   opacity: 0.45;
   cursor: default;
+}
+
+@media (max-width: 1050px) {
+  .alkatresz-mezok { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 800px) {

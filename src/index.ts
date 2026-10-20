@@ -15,7 +15,16 @@ import {
 import { db } from "./db/index.js";
 import { alkatresz } from "./db/schema.js";
 import { excelBetolt } from "./import-xlsx.js";
+import {
+  alkatreszBemenet,
+  alkatresztBetolt,
+  alkatresztLetrehoz,
+  alkatresztModosit,
+  alkatresztTorol,
+} from "./alkatreszek.js";
+import { alapadatHatasa, alapadatotAtnevez, alapadatotTorol, alapadatokListaja, alapFajta } from "./alapadatok.js";
 import { adatlap, keres } from "./kereses.js";
+import { rekeszBemenet, rekeszekListaja, rekesztHozzarendel, rekesztLevesz } from "./rekeszek.js";
 
 const app = new Hono();
 
@@ -32,6 +41,16 @@ async function belepett(c: Context) {
 function csereKell(c: Context, sor: Belepett) {
   if (!sor.jelszoCsere) return null;
   return c.json({ hiba: "Előbb cseréld le a jelszót." }, 403);
+}
+
+function szuperadminKell(c: Context, sor: Belepett) {
+  if (!sor.szuperadmin) return c.json({ hiba: "Ehhez szuperadmin kell." }, 403);
+  return null;
+}
+
+function egesz(ertek: string) {
+  const id = Number(ertek);
+  return Number.isInteger(id) ? id : null;
 }
 
 app.use("/api/*", cors());
@@ -221,6 +240,165 @@ app.post("/api/import", async (c) => {
   } catch (hiba) {
     const uzenet = hiba instanceof Error ? hiba.message : "A betöltés nem sikerült.";
     return c.json({ hiba: uzenet }, 400);
+  }
+});
+
+app.post("/api/alkatreszek", async (c) => {
+  const kapott = await belepett(c);
+  if ("hiba" in kapott) return kapott.hiba;
+  const tiltas = csereKell(c, kapott.sor);
+  if (tiltas) return tiltas;
+  try {
+    await alkatresztLetrehoz(alkatreszBemenet(await c.req.json().catch(() => null)));
+    return c.json({ ok: true });
+  } catch (hiba) {
+    return c.json({ hiba: hibaUzenet(hiba, "A felvitel nem sikerült.") }, 400);
+  }
+});
+
+app.get("/api/alkatreszek/:id", async (c) => {
+  const kapott = await belepett(c);
+  if ("hiba" in kapott) return kapott.hiba;
+  const tiltas = csereKell(c, kapott.sor);
+  if (tiltas) return tiltas;
+  const id = Number(c.req.param("id"));
+  if (!Number.isInteger(id)) return c.json({ hiba: "Érvénytelen azonosító." }, 400);
+  const sor = await alkatresztBetolt(id);
+  if (!sor) return c.json({ hiba: "Nincs ilyen alkatrész." }, 404);
+  return c.json(sor);
+});
+
+app.patch("/api/alkatreszek/:id", async (c) => {
+  const kapott = await belepett(c);
+  if ("hiba" in kapott) return kapott.hiba;
+  const tiltas = csereKell(c, kapott.sor);
+  if (tiltas) return tiltas;
+  const id = Number(c.req.param("id"));
+  if (!Number.isInteger(id)) return c.json({ hiba: "Érvénytelen azonosító." }, 400);
+  try {
+    await alkatresztModosit(id, alkatreszBemenet(await c.req.json().catch(() => null)));
+    return c.json({ ok: true });
+  } catch (hiba) {
+    return c.json({ hiba: hibaUzenet(hiba, "A mentés nem sikerült.") }, 400);
+  }
+});
+
+app.delete("/api/alkatreszek/:id", async (c) => {
+  const kapott = await belepett(c);
+  if ("hiba" in kapott) return kapott.hiba;
+  const tiltas = csereKell(c, kapott.sor);
+  if (tiltas) return tiltas;
+  const id = Number(c.req.param("id"));
+  if (!Number.isInteger(id)) return c.json({ hiba: "Érvénytelen azonosító." }, 400);
+  try {
+    await alkatresztTorol(id);
+    return c.json({ ok: true });
+  } catch (hiba) {
+    return c.json({ hiba: hibaUzenet(hiba, "A törlés nem sikerült.") }, 400);
+  }
+});
+
+app.get("/api/alkatreszek/:id/rekeszek", async (c) => {
+  const kapott = await belepett(c);
+  if ("hiba" in kapott) return kapott.hiba;
+  const tiltas = csereKell(c, kapott.sor);
+  if (tiltas) return tiltas;
+  const id = egesz(c.req.param("id"));
+  if (id == null) return c.json({ hiba: "Érvénytelen azonosító." }, 400);
+  return c.json(await rekeszekListaja(id));
+});
+
+app.post("/api/alkatreszek/:id/rekeszek", async (c) => {
+  const kapott = await belepett(c);
+  if ("hiba" in kapott) return kapott.hiba;
+  const tiltas = csereKell(c, kapott.sor);
+  if (tiltas) return tiltas;
+  const id = egesz(c.req.param("id"));
+  if (id == null) return c.json({ hiba: "Érvénytelen azonosító." }, 400);
+  try {
+    const rekesz = rekeszBemenet(await c.req.json().catch(() => null));
+    await rekesztHozzarendel(id, rekesz.oldal, rekesz.sor, rekesz.oszlop);
+    return c.json({ ok: true });
+  } catch (hiba) {
+    return c.json({ hiba: hibaUzenet(hiba, "A hozzárendelés nem sikerült.") }, 400);
+  }
+});
+
+app.delete("/api/alkatreszek/:id/rekeszek/:rekeszId", async (c) => {
+  const kapott = await belepett(c);
+  if ("hiba" in kapott) return kapott.hiba;
+  const tiltas = csereKell(c, kapott.sor);
+  if (tiltas) return tiltas;
+  const id = egesz(c.req.param("id"));
+  const rekeszId = egesz(c.req.param("rekeszId"));
+  if (id == null || rekeszId == null) return c.json({ hiba: "Érvénytelen azonosító." }, 400);
+  try {
+    await rekesztLevesz(id, rekeszId);
+    return c.json({ ok: true });
+  } catch (hiba) {
+    return c.json({ hiba: hibaUzenet(hiba, "A levétel nem sikerült.") }, 400);
+  }
+});
+
+app.get("/api/alapadatok", async (c) => {
+  const kapott = await belepett(c);
+  if ("hiba" in kapott) return kapott.hiba;
+  const tiltas = csereKell(c, kapott.sor);
+  if (tiltas) return tiltas;
+  const jogosultsag = szuperadminKell(c, kapott.sor);
+  if (jogosultsag) return jogosultsag;
+  return c.json(await alapadatokListaja());
+});
+
+app.get("/api/alapadatok/:fajta/:id/hatas", async (c) => {
+  const kapott = await belepett(c);
+  if ("hiba" in kapott) return kapott.hiba;
+  const tiltas = csereKell(c, kapott.sor);
+  if (tiltas) return tiltas;
+  const jogosultsag = szuperadminKell(c, kapott.sor);
+  if (jogosultsag) return jogosultsag;
+  const fajta = alapFajta(c.req.param("fajta"));
+  const id = egesz(c.req.param("id"));
+  if (!fajta || id == null) return c.json({ hiba: "Érvénytelen azonosító." }, 400);
+  const hatas = await alapadatHatasa(fajta, id);
+  if (!hatas) return c.json({ hiba: "Nincs ilyen adat." }, 404);
+  return c.json(hatas);
+});
+
+app.patch("/api/alapadatok/:fajta/:id", async (c) => {
+  const kapott = await belepett(c);
+  if ("hiba" in kapott) return kapott.hiba;
+  const tiltas = csereKell(c, kapott.sor);
+  if (tiltas) return tiltas;
+  const jogosultsag = szuperadminKell(c, kapott.sor);
+  if (jogosultsag) return jogosultsag;
+  const fajta = alapFajta(c.req.param("fajta"));
+  const id = egesz(c.req.param("id"));
+  if (!fajta || id == null) return c.json({ hiba: "Érvénytelen azonosító." }, 400);
+  const adatok = await c.req.json().catch(() => null);
+  try {
+    await alapadatotAtnevez(fajta, id, typeof adatok?.nev === "string" ? adatok.nev : "");
+    return c.json({ ok: true });
+  } catch (hiba) {
+    return c.json({ hiba: hibaUzenet(hiba, "A mentés nem sikerült.") }, 400);
+  }
+});
+
+app.delete("/api/alapadatok/:fajta/:id", async (c) => {
+  const kapott = await belepett(c);
+  if ("hiba" in kapott) return kapott.hiba;
+  const tiltas = csereKell(c, kapott.sor);
+  if (tiltas) return tiltas;
+  const jogosultsag = szuperadminKell(c, kapott.sor);
+  if (jogosultsag) return jogosultsag;
+  const fajta = alapFajta(c.req.param("fajta"));
+  const id = egesz(c.req.param("id"));
+  if (!fajta || id == null) return c.json({ hiba: "Érvénytelen azonosító." }, 400);
+  try {
+    await alapadatotTorol(fajta, id);
+    return c.json({ ok: true });
+  } catch (hiba) {
+    return c.json({ hiba: hibaUzenet(hiba, "A törlés nem sikerült.") }, 400);
   }
 });
 
